@@ -1,5 +1,6 @@
 package org.pytorch.demo.vision;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -86,6 +87,11 @@ public class ImageClassificationActivity extends AbstractCameraXActivity<ImageCl
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      getWindow().setDecorFitsSystemWindows( false );
+    }
+
     final ResultRowView headerResultRowView =
         findViewById(R.id.image_classification_result_header_row);
     headerResultRowView.nameTextView.setText(R.string.image_classification_results_header_row_name);

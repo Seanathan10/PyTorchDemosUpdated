@@ -2,6 +2,7 @@ package org.pytorch.demo.vision;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Size;
@@ -35,6 +36,11 @@ public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      getWindow().setDecorFitsSystemWindows( false );
+    }
+
     StatusBarUtils.setStatusBarOverlay(getWindow(), true);
     setContentView(getContentViewLayoutId());
 
@@ -54,13 +60,14 @@ public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
   @Override
   public void onRequestPermissionsResult(
       int requestCode, String[] permissions, int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (requestCode == REQUEST_CODE_CAMERA_PERMISSION) {
       if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
         Toast.makeText(
-            this,
-            "You can't use image classification example without granting CAMERA permission",
-            Toast.LENGTH_LONG)
-            .show();
+                        this,
+                        "You can't use image classification example without granting CAMERA permission",
+                        Toast.LENGTH_LONG)
+                .show();
         finish();
       } else {
         setupCameraX();
@@ -76,6 +83,7 @@ public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
 
     final ImageAnalysisConfig imageAnalysisConfig =
         new ImageAnalysisConfig.Builder()
+            .setLensFacing( CameraX.LensFacing.BACK )
             .setTargetResolution(new Size(224, 224))
             .setCallbackHandler(mBackgroundHandler)
             .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)

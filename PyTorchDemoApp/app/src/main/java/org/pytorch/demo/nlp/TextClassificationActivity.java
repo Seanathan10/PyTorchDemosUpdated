@@ -1,5 +1,6 @@
 package org.pytorch.demo.nlp;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -75,6 +76,11 @@ public class TextClassificationActivity extends BaseModuleActivity {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      getWindow().setDecorFitsSystemWindows( false );
+    }
+
     setContentView(R.layout.activity_text_classification);
     mEditText = findViewById(R.id.text_classification_edit_text);
     findViewById(R.id.text_classification_clear_button).setOnClickListener(v -> mEditText.setText(""));

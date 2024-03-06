@@ -1,6 +1,7 @@
 package org.pytorch.demo.vision;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import org.pytorch.demo.AbstractListActivity;
@@ -12,6 +13,11 @@ public class VisionListActivity extends AbstractListActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      getWindow().setDecorFitsSystemWindows( false );
+    }
+
     findViewById(R.id.vision_card_qmobilenet_click_area).setOnClickListener(v -> {
       final Intent intent = new Intent(VisionListActivity.this, ImageClassificationActivity.class);
       intent.putExtra(ImageClassificationActivity.INTENT_MODULE_ASSET_NAME,
