@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.pytorch.demo">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +16,7 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".WelcomeActivity"
-            android:label="@string/app_name">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,7 +32,5 @@
         <activity android:name=".nlp.TextClassificationActivity" />
 
     </application>
-
-    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>
