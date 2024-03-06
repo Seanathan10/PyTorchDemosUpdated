@@ -8,6 +8,7 @@ import org.pytorch.demo.nlp.NLPListActivity;
 import org.pytorch.demo.vision.VisionListActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,7 +16,9 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+      WindowCompat.setDecorFitsSystemWindows( getWindow(), false );
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       getWindow().setDecorFitsSystemWindows( false );
     }
 

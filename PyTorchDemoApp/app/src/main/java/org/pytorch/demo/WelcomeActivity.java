@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -54,7 +55,9 @@ public class WelcomeActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_welcome);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+      WindowCompat.setDecorFitsSystemWindows( getWindow(), false );
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       getWindow().setDecorFitsSystemWindows( false );
     }
 

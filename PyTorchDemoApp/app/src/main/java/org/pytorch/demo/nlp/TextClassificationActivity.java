@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.core.view.WindowCompat;
 
 public class TextClassificationActivity extends BaseModuleActivity {
 
@@ -77,7 +78,9 @@ public class TextClassificationActivity extends BaseModuleActivity {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+      WindowCompat.setDecorFitsSystemWindows( getWindow(), false );
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       getWindow().setDecorFitsSystemWindows( false );
     }
 

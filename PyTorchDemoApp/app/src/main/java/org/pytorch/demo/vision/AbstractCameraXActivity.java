@@ -22,6 +22,7 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.WindowCompat;
 
 public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
   private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
@@ -37,7 +38,9 @@ public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+      WindowCompat.setDecorFitsSystemWindows( getWindow(), false );
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       getWindow().setDecorFitsSystemWindows( false );
     }
 

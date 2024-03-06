@@ -28,6 +28,7 @@ import java.util.Queue;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.camera.core.ImageProxy;
+import androidx.core.view.WindowCompat;
 
 public class ImageClassificationActivity extends AbstractCameraXActivity<ImageClassificationActivity.AnalysisResult> {
 
@@ -88,7 +89,9 @@ public class ImageClassificationActivity extends AbstractCameraXActivity<ImageCl
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+      WindowCompat.setDecorFitsSystemWindows( getWindow(), false );
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       getWindow().setDecorFitsSystemWindows( false );
     }
 
