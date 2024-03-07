@@ -2,11 +2,13 @@
 
 A list of Android demo apps built on the powerful [PyTorch Mobile](https://pytorch.org/mobile) platform.
 
+A green checkmark (✅) indicated that a demo app has been updated and compiled for Android 14 & that it is available via the Releases tab of this repo.
+
 ### HelloWorld
 
 [HelloWorld](https://github.com/pytorch/android-demo-app/tree/master/HelloWorldApp) is a simple image classification application that demonstrates how to use the PyTorch Android API with the latest PyTorch 1.8, MobileNet v3, and [MemoryFormat.CHANNELS_LAST](https://pytorch.org/tutorials/intermediate/memory_format_tutorial.html).
 
-### PyTorch demo app (Updated & compiles for Android 14)
+### PyTorch demo app ✅
 
 The [PyTorch demo app](https://github.com/pytorch/android-demo-app/tree/master/PyTorchDemoApp) is a full-fledged app that contains two showcases. A camera app that runs a quantized model to classifiy images in real time. And a text-based app that uses a text classification model to predict the topic from the input text.
 
