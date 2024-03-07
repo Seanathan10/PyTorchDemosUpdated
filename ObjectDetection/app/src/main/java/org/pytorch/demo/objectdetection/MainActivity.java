@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         mResultView.setVisibility(View.INVISIBLE);
 
         final Button buttonTest = findViewById(R.id.testButton);
-        buttonTest.setText(("Test Image 1/3"));
+        buttonTest.setText((R.string.TestImage1of3));
         buttonTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mResultView.setVisibility(View.INVISIBLE);

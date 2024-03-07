@@ -6,4 +6,5 @@
     <string name="restart">Restart</string>
     <string name="select">Select</string>
     <string name="live">Live</string>
+    <string name="TestImage1of3">Test Image 1/3</string>
 </resources>
