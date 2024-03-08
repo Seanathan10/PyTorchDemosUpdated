@@ -50,9 +50,11 @@ The [PyTorch demo app](https://github.com/Seanathan10/PyTorchDemosUpdated/tree/m
 
 [Streaming Speech Recognition](https://github.com/pytorch/android-demo-app/tree/master/StreamingASR) demonstrates how to how to use a new torchaudio pipeline to perform streaming speech recognition, powered by Java Native Call to a C++ audio processing library for the mel spectrogram transform.
 
-## Video Classification
+## Video Classification ✅
 
-[TorchVideo](https://github.com/pytorch/android-demo-app/tree/master/TorchVideo) demonstrates how to use a pre-trained video classification model, available at the newly released [PyTorchVideo](https://github.com/facebookresearch/pytorchvideo), on Android to see video classification results, updated per second while the video plays, on tested videos, videos from the Photos library, or even real-time videos.
+[TorchVideo](https://github.com/Seanathan10/PyTorchDemosUpdated/tree/master/TorchVideo) demonstrates how to use a pre-trained video classification model, available at the newly released [PyTorchVideo](https://github.com/facebookresearch/pytorchvideo), on Android to see video classification results, updated per second while the video plays, on tested videos, videos from the Photos library, or even real-time videos.
+
+[Download here](https://github.com/Seanathan10/PyTorchDemosUpdated/releases/tag/v0.2)
 
 
 ## LICENSE
