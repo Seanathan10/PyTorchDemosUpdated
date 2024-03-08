@@ -14,6 +14,11 @@
         <!-- Customize your theme here. -->
 
         <item name="android:navigationBarColor">@android:color/transparent</item>
+
+        <item name="android:windowLayoutInDisplayCutoutMode">
+            shortEdges <!-- default, shortEdges, or never -->
+        </item>
+
     </style>
 
     <style name="Theme.ASLRecognitionNoBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">

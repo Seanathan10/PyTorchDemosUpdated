@@ -62,8 +62,13 @@ public class LiveASLRecognitionActivity extends org.pytorch.demo.aslrecognition.
     protected TextureView getCameraPreviewTextureView() {
         mResultView = findViewById(R.id.resultView);
 
+//        mResultView.setOnApplyWindowInsetsListener((v, insets) -> {
+//            v.setPadding(0, v.getPaddingTop(), 0, 0);
+//            return insets;
+//        });
+
         mResultView.setOnApplyWindowInsetsListener((v, insets) -> {
-            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), insets.getSystemWindowInsetBottom());
+            v.setPadding(0, insets.getSystemWindowInsetTop(), 0, 0);
             return insets;
         });
 
