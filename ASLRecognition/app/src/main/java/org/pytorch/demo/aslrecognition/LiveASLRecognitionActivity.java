@@ -34,6 +34,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Locale;
 
 
 public class LiveASLRecognitionActivity extends org.pytorch.demo.aslrecognition.AbstractCameraXActivity<LiveASLRecognitionActivity.AnalysisResult> {
@@ -60,6 +61,12 @@ public class LiveASLRecognitionActivity extends org.pytorch.demo.aslrecognition.
     @Override
     protected TextureView getCameraPreviewTextureView() {
         mResultView = findViewById(R.id.resultView);
+
+        mResultView.setOnApplyWindowInsetsListener((v, insets) -> {
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), insets.getSystemWindowInsetBottom());
+            return insets;
+        });
+
         return ((ViewStub) findViewById(R.id.asl_recognition_texture_view_stub))
                 .inflate()
                 .findViewById(R.id.object_detection_texture_view);
@@ -127,6 +134,6 @@ public class LiveASLRecognitionActivity extends org.pytorch.demo.aslrecognition.
         else if (maxScoreIdx == SPACE) {
             result = "SPACE";
         }
-        return new AnalysisResult(String.format("%s - %dms", result, inferenceTime));
+        return new AnalysisResult(String.format(Locale.US, "%s - %dms", result, inferenceTime));
     }
 }

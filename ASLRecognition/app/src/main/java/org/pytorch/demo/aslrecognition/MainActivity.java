@@ -1,21 +1,22 @@
 package org.pytorch.demo.aslrecognition;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.util.Pair;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.WindowCompat;
 
 import org.pytorch.IValue;
 import org.pytorch.LiteModuleLoader;
@@ -23,11 +24,11 @@ import org.pytorch.Module;
 import org.pytorch.Tensor;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.FloatBuffer;
+import java.nio.file.Files;
 
 public class MainActivity extends AppCompatActivity implements Runnable {
     private ImageView mImageView;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         }
 
         try (InputStream is = context.getAssets().open(assetName)) {
-            try (OutputStream os = new FileOutputStream(file)) {
+            try (OutputStream os = Files.newOutputStream(file.toPath())) {
                 byte[] buffer = new byte[4 * 1024];
                 int read;
                 while ((read = is.read(buffer)) != -1) {
@@ -63,6 +64,19 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        WindowCompat.setDecorFitsSystemWindows( getWindow(), false );
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getWindow().setDecorFitsSystemWindows( false );
+        }
+
+        int transparent = ResourcesCompat.getColor(getResources(), android.R.color.transparent, getTheme());
+
+//        getWindow().setStatusBarColor( transparent );
+        getWindow().setNavigationBarColor( transparent );
+
+
+
         try {
             mBitmap = BitmapFactory.decodeStream(getAssets().open("A1.jpg"));
         } catch (IOException e) {
@@ -76,40 +90,42 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         mTvResult = findViewById(R.id.tvResult);
         mTvResult.setText(mLetter);
 
+
+        mImageView.setOnApplyWindowInsetsListener((v, insets) -> {
+            v.setPadding(0, insets.getSystemWindowInsetTop(), 0, 0);
+            return insets;
+        });
+
+
+
         final Button btnNext = findViewById(R.id.nextButton);
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                mStartLetterPos = (mStartLetterPos + 1) % 26;
-                if (mStartLetterPos == 0) {
-                    mStartLetterPos = 26;
-                }
-                mLetter = String.valueOf((char)(mStartLetterPos + 64));
-                String imageName = String.format("%s1.jpg", mLetter);
-                mTvResult.setText(mLetter);
-                try {
-                    mBitmap = BitmapFactory.decodeStream(getAssets().open(imageName));
-                    mImageView.setImageBitmap(mBitmap);
-                } catch (IOException e) {
-                    Log.e("ASLRecognition", "Error reading assets", e);
-                    finish();
-                }
+        btnNext.setOnClickListener(v -> {
+            mStartLetterPos = (mStartLetterPos + 1) % 26;
+            if (mStartLetterPos == 0) {
+                mStartLetterPos = 26;
+            }
+            mLetter = String.valueOf((char)(mStartLetterPos + 64));
+            String imageName = String.format("%s1.jpg", mLetter);
+            mTvResult.setText(mLetter);
+            try {
+                mBitmap = BitmapFactory.decodeStream(getAssets().open(imageName));
+                mImageView.setImageBitmap(mBitmap);
+            } catch (IOException e) {
+                Log.e("ASLRecognition", "Error reading assets", e);
+                finish();
             }
         });
 
         mButtonRecognize = findViewById(R.id.recognizeButton);
-        mButtonRecognize.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Thread thread = new Thread(MainActivity.this);
-                thread.start();
-            }
+        mButtonRecognize.setOnClickListener(v -> {
+            Thread thread = new Thread(MainActivity.this);
+            thread.start();
         });
 
         final Button buttonLive = findViewById(R.id.liveButton);
-        buttonLive.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                final Intent intent = new Intent(MainActivity.this, LiveASLRecognitionActivity.class);
-                startActivity(intent);
-            }
+        buttonLive.setOnClickListener(v -> {
+            final Intent intent = new Intent(MainActivity.this, LiveASLRecognitionActivity.class);
+            startActivity(intent);
         });
 
         try {
@@ -157,14 +173,10 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         Pair<Integer, Long> idxTm = bitmapRecognition(mBitmap, mModule);
 
         int finalMaxScoreIdx = idxTm.first;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mTvResult.setText(String.format("%s - %s", mLetter,
-                        String.valueOf((char)(1 + finalMaxScoreIdx + 64))));
-                mButtonRecognize.setEnabled(true);
-                mButtonRecognize.setText(getString(R.string.recognize));
-            }
+        runOnUiThread(() -> {
+            mTvResult.setText(String.format("%s - %s", mLetter, (char) (1 + finalMaxScoreIdx + 64)));
+            mButtonRecognize.setEnabled(true);
+            mButtonRecognize.setText(getString(R.string.recognize));
         });
     }
 }
