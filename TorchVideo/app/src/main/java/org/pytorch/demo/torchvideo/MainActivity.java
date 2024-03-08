@@ -1,5 +1,6 @@
 package org.pytorch.demo.torchvideo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -32,10 +33,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.FloatBuffer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements Runnable {
@@ -61,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         }
 
         try (InputStream is = context.getAssets().open(assetName)) {
-            try (OutputStream os = new FileOutputStream(file)) {
+            try (OutputStream os = Files.newOutputStream(file.toPath())) {
                 byte[] buffer = new byte[4 * 1024];
                 int read;
                 while ((read = is.read(buffer)) != -1) {
@@ -106,12 +110,12 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         mTextView.setVisibility(View.INVISIBLE);
 
         mButtonTest = findViewById(R.id.testButton);
-        mButtonTest.setText(String.format("Test 1/%d", mTestVideos.length));
+        mButtonTest.setText(String.format(Locale.US, "Test 1/%d", mTestVideos.length));
         mButtonTest.setEnabled(false);
         mButtonTest.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 mTestVideoIndex = (mTestVideoIndex + 1) % mTestVideos.length;
-                mButtonTest.setText(String.format("Test %d/%d", mTestVideoIndex + 1, mTestVideos.length));
+                mButtonTest.setText(String.format(Locale.US, "Test %d/%d", mTestVideoIndex + 1, mTestVideos.length));
                 mButtonTest.setEnabled(false);
                 mTextView.setText("");
                 mTextView.setVisibility(View.INVISIBLE);
@@ -138,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
         final Button buttonSelect = findViewById(R.id.selectButton);
         buttonSelect.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("IntentReset")
             public void onClick(View v) {
                 mStopThread = true;
                 Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -171,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                 mThread.join();
             }
             catch (InterruptedException e) {
-                Log.e(TAG, e.getLocalizedMessage());
+                Log.e(TAG, Objects.requireNonNull(e.getLocalizedMessage()));
             }
         }
 
@@ -211,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(this.getApplicationContext(), mVideoUri);
         String stringDuration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        assert stringDuration != null;
         double durationMs = Double.parseDouble(stringDuration);
 
         // for each second of the video, make inference to get the class label
@@ -233,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
             if (i * 1000 > mVideoView.getCurrentPosition()) {
                 try {
-                    Thread.sleep(i * 1000 - mVideoView.getCurrentPosition());
+                    Thread.sleep(i * 1000L - mVideoView.getCurrentPosition());
                 } catch (InterruptedException e) {
                     Log.e(TAG, "Thread sleep exception: " + e.getLocalizedMessage());
                 }
@@ -253,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
                 @Override
                 public void run() {
                     mTextView.setVisibility(View.VISIBLE);
-                    mTextView.setText(String.format("%ds: %s - %dms", finalI +1, result, inferenceTime));
+                    mTextView.setText(String.format(Locale.US, "%ds: %s - %dms", finalI +1, result, inferenceTime));
                 }
             });
             mResults.add(result);
@@ -294,7 +300,9 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         final long inferenceTime = SystemClock.elapsedRealtime() - startTime;
 
         final float[] scores = outputTensor.getDataAsFloatArray();
-        Integer scoresIdx[] = new Integer[scores.length];
+//        C-style C style array lol
+//        Integer scoresIdx[] = new Integer[scores.length];
+        Integer[] scoresIdx = new Integer[scores.length];
         for (int i = 0; i < scores.length; i++)
             scoresIdx[i] = i;
 
@@ -312,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             Uri selectedMediaUri = data.getData();
+            assert selectedMediaUri != null;
             if (selectedMediaUri.toString().contains("video")) {
                 mVideoUri = selectedMediaUri;
                 startVideo();

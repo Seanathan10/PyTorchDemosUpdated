@@ -13,9 +13,9 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Size;
 import android.view.TextureView;
-import android.view.Window;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
@@ -27,9 +27,7 @@ import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
-//import androidx.core.content.ResourcesCompat;
 import androidx.core.view.WindowCompat;
-import org.pytorch.demo.torchvideo.R;
 
 public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
@@ -78,7 +76,7 @@ public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == REQUEST_CODE_CAMERA_PERMISSION) {
