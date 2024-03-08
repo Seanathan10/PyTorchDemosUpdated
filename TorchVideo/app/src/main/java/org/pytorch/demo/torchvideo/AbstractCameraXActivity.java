@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Size;
 import android.view.TextureView;
+import android.view.Window;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,7 +26,10 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.res.ResourcesCompat;
+//import androidx.core.content.ResourcesCompat;
 import androidx.core.view.WindowCompat;
+import org.pytorch.demo.torchvideo.R;
 
 public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
@@ -41,6 +45,18 @@ public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewLayoutId());
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        int TransparentColour = ResourcesCompat.getColor( getResources(), android.R.color.holo_blue_dark, getTheme() );
+        getWindow().setNavigationBarColor( TransparentColour );
+
+
+//        int BlueColor = ResourcesCompat.getColor( getResources(), R.color.navigationBarBlue, getTheme() );
+//                android:background="#FF2356E7"
+//        getWindow().setNavigationBarColor( BlueColor );
+
+
+
 
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
             WindowCompat.setDecorFitsSystemWindows( getWindow(), false );
