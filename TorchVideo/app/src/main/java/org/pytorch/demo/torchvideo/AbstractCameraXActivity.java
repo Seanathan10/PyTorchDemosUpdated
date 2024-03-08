@@ -8,6 +8,7 @@ package org.pytorch.demo.torchvideo;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Size;
@@ -24,6 +25,7 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.WindowCompat;
 
 public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 200;
@@ -40,6 +42,12 @@ public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewLayoutId());
 
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+            WindowCompat.setDecorFitsSystemWindows( getWindow(), false );
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getWindow().setDecorFitsSystemWindows( false );
+        }
+
         startBackgroundThread();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -55,13 +63,15 @@ public abstract class AbstractCameraXActivity<R> extends BaseModuleActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if (requestCode == REQUEST_CODE_CAMERA_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 Toast.makeText(
-                    this,
-                    "You can't use live video classification example without granting CAMERA permission",
-                    Toast.LENGTH_LONG)
-                    .show();
+                                this,
+                                "You can't use live video classification example without granting CAMERA permission",
+                                Toast.LENGTH_LONG)
+                        .show();
                 finish();
             } else {
                 setupCameraX();

@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.media.Image;
+import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.TextureView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.camera.core.ImageProxy;
+import androidx.core.view.WindowCompat;
 
 import org.pytorch.IValue;
 import org.pytorch.LiteModuleLoader;
@@ -49,11 +51,23 @@ public class LiveVideoClassificationActivity extends AbstractCameraXActivity<Liv
 
         @Override
         protected int getContentViewLayoutId() {
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                WindowCompat.setDecorFitsSystemWindows( getWindow(), false );
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                getWindow().setDecorFitsSystemWindows( false );
+            }
+
             return R.layout.activity_live_video_classification;
         }
 
         @Override
         protected TextureView getCameraPreviewTextureView() {
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                WindowCompat.setDecorFitsSystemWindows( getWindow(), false );
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                getWindow().setDecorFitsSystemWindows( false );
+            }
+
             mResultView = findViewById(R.id.resultView);
             return ((ViewStub) findViewById(R.id.object_detection_texture_view_stub))
                     .inflate()
